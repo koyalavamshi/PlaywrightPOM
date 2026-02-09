@@ -6,13 +6,13 @@ pipeline {
     stages {
         stage('Install Dependencies') {
             steps {
-                sh 'npm install'  // or relevant install command
+                bat 'npm install'  // or relevant install command
             }
         }
         stage('Run Playwright Tests') {
             steps {
-                sh 'npx playwright install chromium'
-                sh 'npx playwright test'
+                bat 'npx playwright install chromium'
+                bat 'npx playwright test'
             }
         }
     }
