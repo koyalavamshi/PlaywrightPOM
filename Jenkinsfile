@@ -1,19 +1,39 @@
 pipeline {
     agent any
+
     environment {
-        PLAYWRIGHT_BROWSERS_PATH = "${env.WORKSPACE}/ms-playwright-browsers"
+        // Fix Playwright EPERM issue on Windows (SYSTEM user)
+        PLAYWRIGHT_BROWSERS_PATH = "${env.WORKSPACE}\\ms-playwright"
     }
+
     stages {
-        stage('Install Dependencies') {
+
+        stage('Checkout Code') {
             steps {
-                bat 'npm install'  // or relevant install command
+                checkout scm
             }
         }
-        stage('Run Playwright Tests') {
+
+        stage('Verify Project') {
             steps {
-                bat 'npx playwright install chromium'
-                bat 'npx playwright test'
+                bat 'dir'
+                bat 'dir pom.xml'
             }
+        }
+
+        stage('Run Playwright Java Tests') {
+            steps {
+                bat 'mvn clean test'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline finished'
+        }
+        failure {
+            echo 'Pipeline failed'
         }
     }
 }
