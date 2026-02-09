@@ -2,8 +2,13 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'   // Maven tool configured in Jenkins
-        jdk 'Java17'     // Your Java version
+        jdk 'Java25'       // Use the name you configured in Jenkins
+        maven 'Maven3'     // Make sure Maven3 is configured in Jenkins
+    }
+
+    environment {
+        // Optional: Add PATH to Playwright if needed
+        PW_CLI = "${tool 'Java25'}"  // Example if you need Java path
     }
 
     stages {
@@ -13,58 +18,46 @@ pipeline {
             }
         }
 
-        stage('Locate POM') {
-            steps {
-                // Optional: just to verify pom.xml exists
-                bat 'dir /s pom.xml'
-            }
-        }
-
         stage('Build Project') {
             steps {
-                // Compile the project and download dependencies
+                echo '🔨 Building the project'
                 bat 'mvn clean install -DskipTests'
             }
         }
 
         stage('Install Playwright Browsers') {
             steps {
-                // Required for Playwright Java
+                echo '🌐 Installing Playwright browsers'
+                // Use the Playwright CLI via Maven exec plugin
                 bat 'mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"'
             }
         }
 
         stage('Run Playwright Tests') {
             steps {
-                // Run your Playwright tests via Maven
+                echo '🚀 Running Playwright tests'
                 bat 'mvn test'
             }
         }
 
-        stage('Publish Test Reports') {
+        stage('Archive Test Results') {
             steps {
-                // Optional: if you have Surefire or ReportNG reports
-                publishHTML(target: [
-                    allowMissing: true,
-                    alwaysLinkToLastBuild: true,
-                    keepAll: true,
-                    reportDir: 'target/site/surefire-report.html', // adjust path if needed
-                    reportFiles: 'index.html',
-                    reportName: 'Playwright Test Report'
-                ])
+                echo '📁 Archiving test results and screenshots'
+                junit '**/target/surefire-reports/*.xml'
+                archiveArtifacts artifacts: '**/target/screenshots/*', allowEmptyArchive: true
             }
         }
     }
 
     post {
         success {
-            echo '✅ Playwright tests passed!'
+            echo '✅ Playwright tests completed successfully!'
         }
         failure {
-            echo '❌ Playwright tests failed!'
+            echo '❌ Playwright tests failed.'
         }
         always {
-            echo 'Pipeline finished'
+            echo 'Pipeline finished.'
         }
     }
 }
