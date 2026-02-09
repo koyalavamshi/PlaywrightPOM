@@ -11,10 +11,16 @@ pipeline {
                 checkout scm
             }
         }
-
+stage('Locate POM') {
+    steps {
+        bat 'dir /s pom.xml'
+    }
+}
         stage('Run Playwright Tests') {
             steps {
-                bat 'mvn clean test'
+                dir('PlaywrightPOM') {   // 👈 folder containing pom.xml
+                    bat 'mvn clean test'
+                }
             }
         }
     }
