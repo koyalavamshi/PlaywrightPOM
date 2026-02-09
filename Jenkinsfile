@@ -1,40 +1,18 @@
 pipeline {
     agent any
-
-    tools {
-        jdk 'Java25'
-        maven 'Maven3'
+    environment {
+        PLAYWRIGHT_BROWSERS_PATH = "${env.WORKSPACE}/ms-playwright-browsers"
     }
-
     stages {
-        stage('Checkout Code') {
+        stage('Install Dependencies') {
             steps {
-                checkout scm
+                sh 'npm install'  // or relevant install command
             }
         }
-
-        stage('Build Project') {
-            steps {
-                bat 'mvn clean install -DskipTests'
-            }
-        }
-
-        stage('Install Playwright Browsers') {
-            steps {
-                bat 'mvn exec:java -Dexec.mainClass=com.microsoft.playwright.CLI -Dexec.args="install"'
-            }
-        }
-
         stage('Run Playwright Tests') {
             steps {
-                bat 'mvn test'
-            }
-        }
-
-        stage('Archive Results') {
-            steps {
-                junit '**/target/surefire-reports/*.xml'
-                archiveArtifacts artifacts: '**/target/screenshots/*', allowEmptyArchive: true
+                sh 'npx playwright install chromium'
+                sh 'npx playwright test'
             }
         }
     }
