@@ -9,12 +9,15 @@ pool:
 
 steps:
 - task: Maven@3
-  timeoutInMinutes: 30
+  displayName: 'Execute Web Automation Test Suite'
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
-    javaHomeOption: 'Path'
-    jdkUserInputPath: '$(JAVA_HOME)'
+    
+    # CHANGE THESE LINES TO FORCE A COMPATIBLE JAVA VERSION:
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.17' # Instructs the agent runner to fall back to a stable Java 17 environment
+    
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     goals: 'clean test'
