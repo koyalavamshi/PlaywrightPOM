@@ -1,13 +1,11 @@
 # Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+# Build your Java project and run tests with Apache Maven using your self-hosted agent.
 
 trigger:
 - master
 
 pool:
-  vmImage: 'SelfHostedPool'
+  name: 'SelfHostedPool'
 
 steps:
 - task: Maven@3
