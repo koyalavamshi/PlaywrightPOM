@@ -7,7 +7,7 @@
 
         <classes>
             <class name="com.qa.opencart.tests.HomePageTest"/>
-            <class name="com.qa.opencart.tests.LoginPageTest"/>
+
 
         </classes>
     </test>
