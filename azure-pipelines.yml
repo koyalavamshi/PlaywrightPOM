@@ -10,14 +10,12 @@ steps:
   inputs:
     mavenPomFile: 'pom.xml'
     mavenOptions: '-Xmx3072m'
-    
-    # Corrected Java Home configuration for Self-Hosted Agents
     javaHomeOption: 'Path'
-    jdkUserInputPath: 'C:\Program Files\Java\jdk-17' # Points directly to your machine's SDK root folder
+    jdkUserInputPath: 'C:\Program Files\Java\jdk-17'
+    goals: 'clean test'
     
-    # CRUCIAL FIX: Tells the pipeline to continue and publish reports even if a test fails
+    # CRUCIAL: Keeps the task running to parse and publish your test failures cleanly!
     testFailureIgnore: true
     
     publishJUnitResults: true
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
-    goals: 'clean test -X'
