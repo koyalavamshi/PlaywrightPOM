@@ -13,7 +13,7 @@ steps:
     
     # Corrected Java Home configuration for Self-Hosted Agents
     javaHomeOption: 'Path'
-    jdkUserInputPath: '$(JAVA_HOME)' # Points directly to your machine's SDK root folder
+    jdkUserInputPath: '1.17' # Points directly to your machine's SDK root folder
     
     # CRUCIAL FIX: Tells the pipeline to continue and publish reports even if a test fails
     testFailureIgnore: true
